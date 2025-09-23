@@ -13,7 +13,8 @@ var io = require('socket.io')(server, {
   cors: {
     origin: "https://orgfarm-63d3c365e1-dev-ed.develop.lightning.force.com",
     methods: ["GET", "POST"],
-    allowedHeaders: ["Access-Control-Allow-Origin"]
+    allowedHeaders: ["Access-Control-Allow-Origin"],
+    credentials: true
   }
 });
 
@@ -30,7 +31,8 @@ app.use(
   cors({
     origin: "https://orgfarm-63d3c365e1-dev-ed.develop.lightning.force.com",
     methods: ["GET", "POST"],
-    allowedHeaders: ["Access-Control-Allow-Origin"]
+    allowedHeaders: ["Access-Control-Allow-Origin"],
+    credentials: true
   })
 );
 
