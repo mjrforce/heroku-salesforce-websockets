@@ -7,6 +7,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', (req, res) => {
+	console.log('request params: ', JSON.stringify(req.params));
 	res.io.to(req.params.id).emit('viewerschanged', { id: req.params.id});
 	res.send({status: 'ok'});
 });
