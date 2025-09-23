@@ -10,7 +10,9 @@ router.get('/', function(req, res, next) {
 
 router.post('/', (req, res) => {
 	console.log('request params: ', JSON.stringify(req.query));
-	res.io.to(req.query.id).emit('viewerschanged', { id: req.query.id});
+	let payload = { id: req.query.id};
+	console.log('payload: ' + JSON.stringify(payload));
+	res.io.to(req.query.id).emit('viewerschanged', payload);
 	res.send({status: 'ok'});
 });
 
