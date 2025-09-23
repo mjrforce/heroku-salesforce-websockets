@@ -23,7 +23,7 @@ var io = require('socket.io')(server, {
 
 //On Connection Event
 var socket = io.sockets.on('connection', function (socket) {
-  console.log(JSON.stringify(socket));
+  
  });
 
 // setup view engine 
