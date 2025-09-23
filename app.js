@@ -6,6 +6,16 @@ var config = require('./config.js');
 
 var routes = require('./routes/index');
 var app = express();
+
+app.use(
+  cors({
+    origin: "https://orgfarm-63d3c365e1-dev-ed.develop.lightning.force.com",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Access-Control-Allow-Origin"],
+    credentials: true
+  })
+);
+
 var server = require('http').Server(app);
 
 //initialize io
@@ -26,15 +36,6 @@ var socket = io.sockets.on('connection', function (socket) {
 // setup view engine 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
-
-app.use(
-  cors({
-    origin: "https://orgfarm-63d3c365e1-dev-ed.develop.lightning.force.com",
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Access-Control-Allow-Origin"],
-    credentials: true
-  })
-);
 
 app.use(function(req, res, next){
   res.io = io;
