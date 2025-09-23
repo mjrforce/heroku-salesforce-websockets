@@ -2,59 +2,25 @@ var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var config = require('./config.js');
-var jsforce = require('jsforce');
-var routes = require('./routes/index');
-const { getToken } = require('salesforce-jwt-bearer-token-flow');
 
+var routes = require('./routes/index');
 var app = express();
 var server = require('http').Server(app);
+
+//initialize io
 var io = require('socket.io')(server, {
   cors: {
-    origin: "https://<instance url>.lightning.force.com",
+    origin: "https://orgfarm-63d3c365e1-dev-ed.develop.lightning.force.com",
     methods: ["GET", "POST"],
     allowedHeaders: ["Access-Control-Allow-Origin"],
     credentials: true
   }
 });
-var socket = io.sockets.on('connection', function (socket) { });
 
-var replayId = -1; // -1 = Only New messages | -2 = All Window and New
-
-var channel = '/event/SocketMessage__e';
-const conn = new jsforce.Connection();
-
- getToken({
-  iss: config.CLIENTID,
-  sub: config.USERNAME,
-  aud: config.URL,
-  privateKey: config.KEY
-}, function(err, response){
- console.log('Entered');
-  if (err) {
-    console.error(err);
-  } else {
-    conn.initialize({
-      instanceUrl: response.instance_url,
-      accessToken: response.access_token
-    });
-    console.log('Successfully connected to Org');
-
-    var client = conn.streaming.createClient([
-      new jsforce.StreamingExtension.Replay(channel, replayId),
-      new jsforce.StreamingExtension.AuthFailure(function () {
-        console.log('failed');
-        return process.exit(1);
-      }),
-    ]);
-  
-    subscription = client.subscribe(channel, function (data) {
-      console.log('Received CDC Event');
-      socket.send(JSON.stringify(data));
-      console.log('Data sent to clients!!');
-    });
-  }
-
-});
+//On Connection Event
+var socket = io.sockets.on('connection', function (socket) {
+  console.log(JSON.stringify(socket));
+ });
 
 // setup view engine 
 app.set('views', path.join(__dirname, 'views'));
