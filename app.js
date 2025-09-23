@@ -7,9 +7,7 @@ var config = require('./config.js');
 var routes = require('./routes/index');
 var app = express();
 
-app.use(
-  cors({ origin: "https://orgfarm-63d3c365e1-dev-ed.develop.lightning.force.com" })
-);
+app.use(cors());
 
 var server = require('http').Server(app);
 
