@@ -8,12 +8,7 @@ var routes = require('./routes/index');
 var app = express();
 
 app.use(
-  cors({
-    origin: "https://orgfarm-63d3c365e1-dev-ed.develop.lightning.force.com",
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Access-Control-Allow-Origin"],
-    credentials: true
-  })
+  cors({ origin: "https://orgfarm-63d3c365e1-dev-ed.develop.lightning.force.com" })
 );
 
 var server = require('http').Server(app);
