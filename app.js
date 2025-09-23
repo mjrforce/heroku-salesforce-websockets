@@ -1,4 +1,5 @@
 var express = require('express');
+const cors = require('cors');
 var path = require('path');
 var favicon = require('serve-favicon');
 var config = require('./config.js');
@@ -25,6 +26,15 @@ var socket = io.sockets.on('connection', function (socket) {
 // setup view engine 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
+
+app.use(
+  cors({
+    origin: "https://orgfarm-63d3c365e1-dev-ed.develop.lightning.force.com",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Access-Control-Allow-Origin"],
+    credentials: true
+  })
+);
 
 app.use(function(req, res, next){
   res.io = io;
