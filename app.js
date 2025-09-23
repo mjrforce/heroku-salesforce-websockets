@@ -5,9 +5,10 @@ var favicon = require('serve-favicon');
 var config = require('./config.js');
 
 var routes = require('./routes/index');
+var bodyparser = require('body-parser');
 var app = express();
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({extended: true}));
 app.use(cors({origin: "https://orgfarm-63d3c365e1-dev-ed.develop.lightning.force.com"}));
 
 var server = require('http').Server(app);
