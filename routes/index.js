@@ -8,6 +8,7 @@ router.get('/', function(req, res, next) {
 
 router.post('/', (req, res) => {
 	res.io.to(req.params.id).emit('viewerschanged', { id: req.params.id});
+	res.send({status: 'ok'});
 });
 
 module.exports = router;
