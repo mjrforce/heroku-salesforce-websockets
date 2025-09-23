@@ -9,8 +9,8 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', (req, res) => {
-	console.log('request params: ', JSON.stringify(req.params));
-	res.io.to(req.params.id).emit('viewerschanged', { id: req.params.id});
+	console.log('request params: ', JSON.stringify(req.query));
+	res.io.to(req.query.id).emit('viewerschanged', { id: req.query.id});
 	res.send({status: 'ok'});
 });
 
