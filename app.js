@@ -24,20 +24,31 @@ var io = require('socket.io')(server, {
 });
 
 //On Connection Event
-var socket = io.sockets.on('connection', function (socket) {
+var socket = io.sockets.on('connection', async function (socket) {
 
     let recordId = socket.handshake.auth.recordId;
     let username = socket.handshake.auth.name;
-    console.log('Joining Room: ' + recordId);
-    let payload = { id: recordId, username: username };
+    let members = await getMembers(recordId);
 
+    console.log('Joining Room: ' + recordId);
+    let payload = { id: recordId, username: username, count: members.length, members: members.join('\n') };
+    console.log('payload: ' + JSON.stringify(payload));
     socket.to(recordId).emit('viewerconnected', payload)
     socket.join(recordId);
 
-    socket.on('disconnecting', function(socket){
+    socket.on('disconnected', async function(socket){
+      members = await getMembers(recordId);
+      payload = { id: recordId, username: username, count: members.length, members: members.join('\n') };
       socket.to(recordId).emit('viewerdisconnected', payload);
     });
  });
+
+ async function getMembers(roomname){
+    let members = await io.in(roomname).fetchSockets().reduce(function(acc, val){
+      acc.push(val.handshake.auth.name);
+    }, []);
+    return members;
+ }
 
 // setup view engine 
 app.set('views', path.join(__dirname, 'views'));
