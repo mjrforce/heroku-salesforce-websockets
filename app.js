@@ -60,7 +60,7 @@ var socket = io.sockets.on('connection', async function (socket) {
 
     let members = await getMembers(recordId);
     let membersarray = [...members];
-    let payload = { id: recordId, username: username, userid: userid, count: membersarray.length, members: membersarray.join('\n') };
+    let payload = { id: recordId, username: username, userid: userid, count: membersarray.length, members: membersarray.join('/n') };
     console.log('payload: ' + JSON.stringify(payload));
     socket.to(recordId).emit('viewerconnected', payload)
     socket.emit('viewerconnected', payload);
@@ -74,7 +74,7 @@ var socket = io.sockets.on('connection', async function (socket) {
       let remainingmembers = await getMembers(recordId);
       let remainingmembersarray = [...remainingmembers];
       let randomuserid = await getRandomUser();
-      payload = { id: recordId, username: username, userid: userid, count: remainingmembersarray.length, remainingmembers: membersarray.join('\n') };
+      payload = { id: recordId, username: username, userid: userid, count: remainingmembersarray.length, remainingmembers: membersarray.join('/n') };
       if(randomuserid)      
       socket.to(randomuserid).emit('viewerdisconnected', payload);
       else
