@@ -49,8 +49,10 @@ var socket = io.sockets.on('connection', async function (socket) {
     let sockets = await io.in(roomname).fetchSockets();
     let members = new Map();
     for(const s of sockets){
-      console.log(JSON.stringify(s.handshake.auth));
-      members.set(s.handshake.auth.userid, s.handshake.auth.name);
+      if(s.handshake.auth.userid){
+        console.log(JSON.stringify(s.handshake.auth));
+        members.set(s.handshake.auth.userid, s.handshake.auth.name);
+      }
     }
     return members.values();
  }
