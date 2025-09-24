@@ -28,13 +28,13 @@ var socket = io.sockets.on('connection', async function (socket) {
 
     let recordId = socket.handshake.auth.recordId;
     let username = socket.handshake.auth.name;
-    let members = await getMembers(recordId);
+    socket.join(recordId);
 
-    console.log('Joining Room: ' + recordId);
+    let members = await getMembers(recordId);
     let payload = { id: recordId, username: username, count: members.length, members: members.join('\n') };
     console.log('payload: ' + JSON.stringify(payload));
     socket.to(recordId).emit('viewerconnected', payload)
-    socket.join(recordId);
+    
 
     socket.on('disconnected', async function(socket){
       members = await getMembers(recordId);
