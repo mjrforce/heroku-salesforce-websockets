@@ -74,7 +74,7 @@ var socket = io.sockets.on('connection', async function (socket) {
       let remainingmembers = await getMembers(recordId);
       let remainingmembersarray = [...remainingmembers];
       let randomuserid = await getRandomUser();
-      payload = { id: recordId, username: username, userid: userid, count: remainingmembersarray.length, remainingmembers: membersarray };
+      payload = { id: recordId, username: username, userid: userid, count: remainingmembersarray.length, remainingmembers: remainingmembersarray };
       if(randomuserid)      
       socket.to(randomuserid).emit('viewerdisconnected', payload);
       else
