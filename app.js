@@ -25,10 +25,11 @@ var io = require('socket.io')(server, {
 
 //On Connection Event
 var socket = io.sockets.on('connection', function (socket) {
-    console.log('Joining Room: ' + socket.handshake.recordId);
+    
+    console.log('Joining Room: ' + socket.handshake.auth.recordId);
     let payload = { id: socket.handshake.recordId};
-    socket.to(socket.handshake.recordId).emit('viewerschanged', payload)
-    socket.join(socket.handshake.recordId);
+    socket.to(socket.handshake.auth.recordId).emit('viewerschanged', payload)
+    socket.join(socket.handshake.auth.recordId);
  });
 
 // setup view engine 
