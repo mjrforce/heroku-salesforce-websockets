@@ -32,7 +32,7 @@ var socket = io.sockets.on('connection', async function (socket) {
     socket.join(recordId);
 
     let members = await getMembers(recordId);
-    let payload = { id: recordId, username: username, userid: userid, count: members.length, members: members.values().join('\n') };
+    let payload = { id: recordId, username: username, userid: userid, count: members.length, members: members.join('\n') };
     console.log('payload: ' + JSON.stringify(payload));
     socket.to(recordId).emit('viewerconnected', payload)
     
@@ -40,7 +40,7 @@ var socket = io.sockets.on('connection', async function (socket) {
     socket.on('disconnect', async function(){
       console.log('disconnected event...');
       members = await getMembers(recordId);
-      payload = { id: recordId, username: username, userid: userid, count: members.length, members: members.values().join('\n') };
+      payload = { id: recordId, username: username, userid: userid, count: members.length, members: members.join('\n') };
       socket.to(recordId).emit('viewerdisconnected', payload);
     });
  });
@@ -52,7 +52,7 @@ var socket = io.sockets.on('connection', async function (socket) {
       console.log(JSON.stringify(s.handshake.auth));
       members.set(s.handshake.auth.userid, s.handshake.auth.name);
     }
-    return members;
+    return members.values();
  }
 
 // setup view engine 
