@@ -25,7 +25,7 @@ var io = require('socket.io')(server, {
 
 //On Connection Event
 var socket = io.sockets.on('connection', function (socket) {
-    console.log(JSON.stringify(socket.handshake));
+    console.log('Joining Room: ' + socket.handshake.recordId);
     socket.join(socket.handshake.recordId);
  });
 
