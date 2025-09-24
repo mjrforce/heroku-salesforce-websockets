@@ -63,6 +63,9 @@ var socket = io.sockets.on('connection', async function (socket) {
     let payload = { id: recordId, username: username, userid: userid, count: membersarray.length, members: membersarray.join('\n') };
     console.log('payload: ' + JSON.stringify(payload));
     socket.to(recordId).emit('viewerconnected', payload)
+    socket.emit('viewerconnected', payload);
+    socket.to(await getRandomUser()).emit('updaterecord', payload);
+    
     
     socket.on('disconnect', async function(){
       console.log('disconnected event...');
