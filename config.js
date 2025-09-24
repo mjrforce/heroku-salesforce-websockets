@@ -5,5 +5,6 @@ exports.CLIENTID = process.env.CLIENTID;
 exports.USERNAME = process.env.USERNAME;
 exports.URL = process.env.URL;
 exports.KEY = process.env.KEY;
+exports.ORIGIN = process.env.ORIGIN;
 
 
