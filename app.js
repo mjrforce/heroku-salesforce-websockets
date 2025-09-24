@@ -48,7 +48,7 @@ var socket = io.sockets.on('connection', async function (socket) {
     let members = [];
     for(const socket of sockets){
       console.log(JSON.stringify(socket.handshake.auth));
-      members.push(socket.handshake.auth.username);
+      members.push(socket.handshake.auth.name);
     }
     return members;
  }
