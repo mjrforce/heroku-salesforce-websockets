@@ -44,9 +44,12 @@ var socket = io.sockets.on('connection', async function (socket) {
  });
 
  async function getMembers(roomname){
-    let members = await io.in(roomname).fetchSockets().reduce(function(acc, val){
-      acc.push(val.handshake.auth.name);
-    }, []);
+    let sockets = await io.in(roomname).fetchSockets();
+    let members = [];
+    for(const socket of sockets){
+      console.log(JSON.stringify(socket.handshake.auth));
+      members.push(socket.handshake.auth.username);
+    }
     return members;
  }
 
