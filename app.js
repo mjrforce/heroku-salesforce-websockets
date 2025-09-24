@@ -26,12 +26,15 @@ var io = require('socket.io')(server, {
 
 //initialize JSforce Connection
 const conn = new jsforce.Connection();
-getToken({
+let options = {
   iss: config.CLIENTID,
   sub: config.USERNAME,
   aud: config.URL,
   privateKey: privateKey
-}, function(err, response){
+};
+
+console.log('options:' + JSON.stringify(options));
+getToken(options, function(err, response){
  console.log('Entered');
   if (err) {
     console.error(err);
