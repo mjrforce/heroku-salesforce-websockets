@@ -64,7 +64,9 @@ var socket = io.sockets.on('connection', async function (socket) {
     console.log('payload: ' + JSON.stringify(payload));
     socket.to(recordId).emit('viewerconnected', payload)
     socket.emit('viewerconnected', payload);
-    socket.to(await getRandomUser()).emit('updaterecord', payload);
+    let ranuser = await getRandomUser();
+    console.log('User ' + ranuser + ' to update salesforce');
+    socket.to(ranuser).emit('updaterecord', payload);
     
     
     socket.on('disconnect', async function(){
