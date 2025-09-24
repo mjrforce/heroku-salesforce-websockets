@@ -37,6 +37,7 @@ var socket = io.sockets.on('connection', async function (socket) {
     
 
     socket.on('disconnected', async function(socket){
+      console.log('disconnected event...');
       members = await getMembers(recordId);
       payload = { id: recordId, username: username, count: members.length, members: members.join('\n') };
       socket.to(recordId).emit('viewerdisconnected', payload);
