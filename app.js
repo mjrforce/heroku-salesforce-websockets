@@ -108,7 +108,7 @@ var socket = io.sockets.on('connection', async function (socket) {
   if(arr.length == 0)
   return null;
   else
-  return arr[randomIndex].handnshake.auth.userid;
+  return arr[randomIndex].handshake.auth.userid;
  }
 
 module.exports = {app: app, server: server};
