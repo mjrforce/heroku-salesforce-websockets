@@ -8,6 +8,7 @@
   "dependencies": {
     "body-parser": "^2.2.0",
     "debug": "~2.2.0",
+    "dotenv": "^17.2.2",
     "express": "~4.13.1",
     "hbs": "~3.1.0",
     "jsforce": "^1.10.1",

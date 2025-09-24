@@ -1,10 +1,10 @@
+require('dotenv').config()
 var jsforce = require('jsforce');
 const { getToken } = require('salesforce-jwt-bearer-token-flow');
 const privateKey = require('fs').readFileSync('./keys/server.key', 'utf8');
 
 var express = require('express');
 const cors = require('cors');
-var config = require('./config.js');
 var bodyparser = require('body-parser');
 
 var app = express();
@@ -27,9 +27,9 @@ var io = require('socket.io')(server, {
 //initialize JSforce Connection
 const conn = new jsforce.Connection();
 let options = {
-  iss: config.CLIENTID,
-  sub: config.USERNAME,
-  aud: config.URL,
+  iss: process.env.CLIENTID,
+  sub: process.env.USERNAME,
+  aud: process.env.URL,
   privateKey: privateKey
 };
 
@@ -86,6 +86,5 @@ var socket = io.sockets.on('connection', async function (socket) {
     return members.values();
  }
 
-module.exports = {app: app, server: server, config: config};
-exports.config = config;
+module.exports = {app: app, server: server};
 exports.socket = socket;
