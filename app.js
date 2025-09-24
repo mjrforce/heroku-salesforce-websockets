@@ -28,10 +28,11 @@ var socket = io.sockets.on('connection', async function (socket) {
 
     let recordId = socket.handshake.auth.recordId;
     let username = socket.handshake.auth.name;
+    let userid = socket.handshake.auth.userid;
     socket.join(recordId);
 
     let members = await getMembers(recordId);
-    let payload = { id: recordId, username: username, count: members.length, members: members.join('\n') };
+    let payload = { id: recordId, username: username, userid: userid, count: members.length, members: members.join('\n') };
     console.log('payload: ' + JSON.stringify(payload));
     socket.to(recordId).emit('viewerconnected', payload)
     
@@ -39,17 +40,17 @@ var socket = io.sockets.on('connection', async function (socket) {
     socket.on('disconnect', async function(){
       console.log('disconnected event...');
       members = await getMembers(recordId);
-      payload = { id: recordId, username: username, count: members.length, members: members.join('\n') };
+      payload = { id: recordId, username: username, userid: userid, count: members.length, members: members.join('\n') };
       socket.to(recordId).emit('viewerdisconnected', payload);
     });
  });
 
  async function getMembers(roomname){
     let sockets = await io.in(roomname).fetchSockets();
-    let members = [];
+    let members = new Map();
     for(const s of sockets){
       console.log(JSON.stringify(s.handshake.auth));
-      members.push(s.handshake.auth.name);
+      members.set(s.handshake.auth.userid, s.handshake.auth.name);
     }
     return members;
  }
