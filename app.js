@@ -17,7 +17,7 @@ var server = require('http').Server(app);
 //initialize io
 var io = require('socket.io')(server, {
   cors: {
-    origin: "https://orgfarm-63d3c365e1-dev-ed.develop.lightning.force.com",
+    origin: process.env.ORIGIN,
     methods: ["GET", "POST"],
     allowedHeaders: ["Access-Control-Allow-Origin"],
     credentials: true
@@ -33,7 +33,6 @@ let options = {
   privateKey: privateKey
 };
 
-console.log('options:' + JSON.stringify(options));
 getToken(options, function(err, response){
  console.log('Entered');
   if (err) {
@@ -54,7 +53,10 @@ var socket = io.sockets.on('connection', async function (socket) {
     let recordId = socket.handshake.auth.recordId;
     let username = socket.handshake.auth.name;
     let userid = socket.handshake.auth.userid;
+    let trackerId = socket.handshake.auth.trackerId;
     socket.join(recordId);
+    socket.join(userid);
+    socket.join('all');
 
     let members = await getMembers(recordId);
     let membersarray = [...members];
@@ -64,12 +66,23 @@ var socket = io.sockets.on('connection', async function (socket) {
     
     socket.on('disconnect', async function(){
       console.log('disconnected event...');
-      members = await getMembers(recordId);
-      membersarray = [...members];
-      payload = { id: recordId, username: username, userid: userid, count: membersarray.length, members: membersarray.join('\n') };
-      socket.to(recordId).emit('viewerdisconnected', payload);
+      let remainingmembers = await getMembers(recordId);
+      let remainingmembersarray = [...remainingmembers];
+      let randomuserid = await getRandomUser();
+      payload = { id: recordId, username: username, userid: userid, count: remainingmembersarray.length, remainingmembers: membersarray.join('\n') };
+      if(randomuserid)      
+      socket.to(randomuserid).emit('viewerdisconnected', payload);
+      else
+      updateSalesforce({ Id: trackerId, Number_of_Viewers__c: 0, Viewers__c: '' });
     });
  });
+
+ async function updateSalesforce(data){
+  const ret = await conn.sobject("Case_Viewer_Tracker__c").update(data);
+  if (ret.success) {
+    console.log(`Updated Successfully : ${ret.id}`);
+  }
+ }
 
  async function getMembers(roomname){
     let sockets = await io.in(roomname).fetchSockets();
@@ -80,10 +93,17 @@ var socket = io.sockets.on('connection', async function (socket) {
         members.set(s.handshake.auth.userid, s.handshake.auth.name);
       }
     }
-    console.log('members: ' + [...members.values()].join(','));
-    console.log(members.values());
-    console.log(JSON.stringify([...members.values()]));
     return members.values();
+ }
+
+ async function getRandomUser(){
+  let sockets = await io.in('all').fetchSockets();
+  let arr = [...sockets];
+  const randomIndex = Math.floor(Math.random() * arr.length);
+  if(arr.length == 0)
+  return null;
+  else
+  return arr[randomIndex].handnshake.auth.userid;
  }
 
 module.exports = {app: app, server: server};
