@@ -83,7 +83,7 @@ var socket = io.sockets.on('connection', async function (socket) {
  });
 
  async function updateSalesforce(data){
-  const ret = await conn.sobject("Case_Viewer_Tracker__c").update(data);
+  const ret = await conn.sobject("Case_View_Tracker__c").update(data);
   if (ret.success) {
     console.log(`Updated Successfully : ${ret.id}`);
   }
