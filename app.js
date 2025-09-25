@@ -54,6 +54,7 @@ var socket = io.sockets.on('connection', async function (socket) {
     let username = socket.handshake.auth.name;
     let userid = socket.handshake.auth.userid;
     let trackerId = socket.handshake.auth.trackerId;
+    disconnectDuplicateSockets(userid);
     socket.join(recordId);
     socket.join(userid);
     socket.join('all');
@@ -99,6 +100,13 @@ var socket = io.sockets.on('connection', async function (socket) {
       }
     }
     return members.values();
+ }
+
+ async function disconnectDuplicateSockets(uid){
+  let sockets = await io.in(uid).fetchSockets();
+  for(const s of sockets){
+    s.disconnect();
+  }
  }
 
  async function getRandomUser(){
