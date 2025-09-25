@@ -74,11 +74,11 @@ var socket = io.sockets.on('connection', async function (socket) {
       console.log('disconnected event...');
       let remainingmembers = await getMembers(recordId);
       let remainingmembersarray = [...remainingmembers];
-      let randomuserid = await getRandomUser();
+      let randomuser = await getRandomUser();
       payload = { id: recordId, username: username, userid: userid, count: remainingmembersarray.length, remainingmembers: remainingmembersarray };
       socket.to(recordId).emit('viewerdisconnected', payload);
-      if(randomuserid)      
-      socket.to(randomuserid).emit('updaterecord', payload);
+      if(randomuser)      
+      randomuser.emit('updaterecord', payload);
       else
       updateSalesforce({ Id: trackerId, Number_of_Viewers__c: 0, Viewers__c: '' });
     });
@@ -117,7 +117,7 @@ var socket = io.sockets.on('connection', async function (socket) {
   if(arr.length == 0)
   return null;
   else
-  return arr[randomIndex].handshake.auth.userid;
+  return arr[randomIndex];
  }
 
 module.exports = {app: app, server: server};
