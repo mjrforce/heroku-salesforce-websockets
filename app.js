@@ -76,8 +76,9 @@ var socket = io.sockets.on('connection', async function (socket) {
       let remainingmembersarray = [...remainingmembers];
       let randomuserid = await getRandomUser();
       payload = { id: recordId, username: username, userid: userid, count: remainingmembersarray.length, remainingmembers: remainingmembersarray };
+      socket.to(recordId).emit('viewerdisconnected', payload);
       if(randomuserid)      
-      socket.to(randomuserid).emit('viewerdisconnected', payload);
+      socket.to(randomuserid).emit('updaterecord', payload);
       else
       updateSalesforce({ Id: trackerId, Number_of_Viewers__c: 0, Viewers__c: '' });
     });
